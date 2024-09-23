@@ -1,0 +1,14 @@
+{
+	"name": "brainstorm-buddy-extension",
+	"private": "true",
+	"description": "A brainstorming extension for GitHub Copilot",
+	"scripts": {
+		"start": "node index.js",
+		"dev": "node --watch index.js"
+	},
+	"type": "module",
+	"dependencies": {
+		"@octokit/core": "^6.1.2",
+		"express": "^4.19.2"
+	}
+}
