@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/bs"
+  to = "/.netlify/functions/brainstorm"
+  status = 200
