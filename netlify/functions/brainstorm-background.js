@@ -29,13 +29,6 @@ const bsPrompt = `
 `;
 
 export async function handler(event, context) {
-	if (event.httpMethod !== "POST") {
-		return {
-			statusCode: 405,
-			body: JSON.stringify({ error: "Method Not Allowed" }),
-		};
-	}
-
 	try {
 		console.log("Received event:", JSON.stringify(event));
 

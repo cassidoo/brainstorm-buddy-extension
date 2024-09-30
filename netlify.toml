@@ -1,4 +1,4 @@
 [[redirects]]
   from = "/bs"
-  to = "/.netlify/functions/brainstorm"
+  to = "/.netlify/functions/brainstorm-background"
   status = 200
