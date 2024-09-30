@@ -1,8 +1,5 @@
 import { Octokit } from "@octokit/core";
-import { Readable } from "node:stream";
-import fetch from "node-fetch";
-
-const app = express();
+import axios from "axios";
 
 // from github.com/brainstory/prompts
 const bsPrompt = `
@@ -55,22 +52,22 @@ export async function handler(event) {
 			content: bsPrompt,
 		});
 
-		const copilotLLMResponse = await fetch(
+		const copilotLLMResponse = await axios.post(
 			"https://api.githubcopilot.com/chat/completions",
 			{
-				method: "POST",
+				messages,
+				stream: true,
+			},
+			{
 				headers: {
 					authorization: `Bearer ${tokenForUser}`,
 					"content-type": "application/json",
 				},
-				body: JSON.stringify({
-					messages,
-					stream: true,
-				}),
+				responseType: "stream",
 			}
 		);
 
-		const responseStream = copilotLLMResponse.body;
+		const responseStream = copilotLLMResponse.data;
 
 		return new Promise((resolve, reject) => {
 			const chunks = [];
