@@ -1,0 +1,8 @@
+[[redirects]]
+  from = "/bs"
+  to = "/.netlify/functions/brainstorm"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["axios", "@octokit/core"]

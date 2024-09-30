@@ -1,8 +1,4 @@
-import { Octokit } from "@octokit/core";
-import express from "express";
-import { Readable } from "node:stream";
-
-const app = express();
+const axios = require("axios");
 
 // from github.com/brainstory/prompts
 const bsPrompt = `
@@ -32,45 +28,75 @@ const bsPrompt = `
   information.
 `;
 
-app.post("/", express.json(), async (req, res) => {
-	// Identify the user, using the GitHub API token provided in the request headers.
-	const tokenForUser = req.get("X-GitHub-Token");
-	const octokit = new Octokit({ auth: tokenForUser });
-	const user = await octokit.request("GET /user");
-	console.log("User:", user.data.login);
+export async function handler(event) {
+	const { Octokit } = await import("@octokit/core");
+	if (event.httpMethod !== "POST") {
+		return {
+			statusCode: 405,
+			body: JSON.stringify({ message: "Method Not Allowed" }),
+		};
+	}
 
-	// Parse the request payload and log it.
-	const payload = req.body;
-	console.log("Payload:", payload);
+	try {
+		const tokenForUser = event.headers["x-github-token"];
+		const octokit = new Octokit({ auth: tokenForUser });
+		const userResponse = await octokit.request("GET /user");
+		console.log("User:", userResponse.data.login);
 
-	const messages = payload.messages;
-	messages.unshift({
-		role: "system",
-		content: bsPrompt,
-	});
+		const payload = JSON.parse(event.body);
+		console.log("Payload:", payload);
 
-	// Use Copilot's LLM to generate a response to the user's messages, with
-	// our extra system messages attached.
-	const copilotLLMResponse = await fetch(
-		"https://api.githubcopilot.com/chat/completions",
-		{
-			method: "POST",
-			headers: {
-				authorization: `Bearer ${tokenForUser}`,
-				"content-type": "application/json",
-			},
-			body: JSON.stringify({
+		const messages = payload.messages;
+		messages.unshift({
+			role: "system",
+			content: bsPrompt,
+		});
+
+		const copilotLLMResponse = await axios.post(
+			"https://api.githubcopilot.com/chat/completions",
+			{
 				messages,
 				stream: true,
+			},
+			{
+				headers: {
+					authorization: `Bearer ${tokenForUser}`,
+					"content-type": "application/json",
+				},
+				responseType: "stream",
+			}
+		);
+
+		const responseStream = copilotLLMResponse.data;
+
+		return new Promise((resolve, reject) => {
+			const chunks = [];
+			responseStream.on("data", (chunk) => chunks.push(chunk));
+			responseStream.on("end", () => {
+				resolve({
+					statusCode: 200,
+					headers: { "Content-Type": "application/json" },
+					body: Buffer.concat(chunks).toString(),
+				});
+			});
+			responseStream.on("error", (err) => {
+				reject({
+					statusCode: 500,
+					body: JSON.stringify({
+						message: "Internal Server Error",
+						error: err.message,
+					}),
+				});
+			});
+		});
+	} catch (error) {
+		console.error(error);
+		return {
+			statusCode: 500,
+			body: JSON.stringify({
+				message: "Internal Server Error",
+				error: error.message,
 			}),
-		}
-	);
-
-	// Stream the response straight back to the user.
-	Readable.from(copilotLLMResponse.body).pipe(res);
-});
-
-const port = Number(process.env.PORT || "3000");
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-});
+		};
+	}
+}

@@ -10,6 +10,8 @@ After installing the extension, open up GitHub Copilot Chat in VS Code.
 
 You can mention the extension with `@brainstorm-buddy-extension` and start typing, or, for a more fluid experience, you can click the microphone button and verbally speak to it.
 
+Use the free [VS Code Speech](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-speech) extension to enable the microphone button. This extension can be used with other code editors, but the voice recognition may not work with them.
+
 ### Suggested conversation flow/tips
 
 - Start by telling the extension about your project and what you're trying to do. You could say, "I have an idea for a talk I want to give, and I know I want to touch on [some topic], but I'm not sure what else to include." Or, "I want to build a new app that does [some thing], but I'm not sure where to start."
