@@ -2,3 +2,6 @@
   from = "/bs"
   to = "/.netlify/functions/brainstorm"
   status = 200
+
+[functions]
+  external_node_modules = ["axios", "@octokit/core"]
