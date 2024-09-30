@@ -1,4 +1,4 @@
-import { Octokit } from "@octokit/core";
+import { Octokit } from "@octokit/rest";
 
 // from github.com/brainstory/prompts
 const bsPrompt = `
@@ -51,8 +51,8 @@ export async function handler(event, context) {
 		const octokit = new Octokit({ auth: tokenForUser });
 
 		try {
-			const user = await octokit.request("GET /user");
-			console.log("User:", user.data.login);
+			const { data: user } = await octokit.users.getAuthenticated();
+			console.log("User:", user.login);
 		} catch (error) {
 			console.error("Error fetching user:", error);
 			return {

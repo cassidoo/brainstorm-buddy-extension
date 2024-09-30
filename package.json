@@ -8,6 +8,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@octokit/core": "^6.1.2"
+		"@octokit/rest": "^21.0.2"
 	}
 }
