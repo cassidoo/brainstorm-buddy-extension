@@ -30,21 +30,58 @@ const bsPrompt = `
 
 export async function handler(event, context) {
 	if (event.httpMethod !== "POST") {
-		return { statusCode: 405, body: "Method Not Allowed" };
+		return {
+			statusCode: 405,
+			body: JSON.stringify({ error: "Method Not Allowed" }),
+		};
 	}
 
 	try {
-		// Identify the user, using the GitHub API token provided in the request headers.
-		const tokenForUser = event.headers["x-github-token"];
-		const octokit = new Octokit({ auth: tokenForUser });
-		const user = await octokit.request("GET /user");
-		console.log("User:", user.data.login);
+		console.log("Received event:", JSON.stringify(event));
 
-		// Parse the request payload and log it.
-		const payload = JSON.parse(event.body);
-		console.log("Payload:", payload);
+		const tokenForUser = event.headers["x-github-token"];
+		if (!tokenForUser) {
+			console.error("No GitHub token provided");
+			return {
+				statusCode: 401,
+				body: JSON.stringify({ error: "No GitHub token provided" }),
+			};
+		}
+
+		const octokit = new Octokit({ auth: tokenForUser });
+
+		try {
+			const user = await octokit.request("GET /user");
+			console.log("User:", user.data.login);
+		} catch (error) {
+			console.error("Error fetching user:", error);
+			return {
+				statusCode: 401,
+				body: JSON.stringify({ error: "Invalid GitHub token" }),
+			};
+		}
+
+		let payload;
+		try {
+			payload = JSON.parse(event.body);
+			console.log("Payload:", JSON.stringify(payload));
+		} catch (error) {
+			console.error("Error parsing payload:", error);
+			return {
+				statusCode: 400,
+				body: JSON.stringify({ error: "Invalid payload" }),
+			};
+		}
 
 		const messages = payload.messages;
+		if (!Array.isArray(messages)) {
+			console.error("Invalid messages format");
+			return {
+				statusCode: 400,
+				body: JSON.stringify({ error: "Invalid messages format" }),
+			};
+		}
+
 		messages.unshift({
 			role: "system",
 			content: bsPrompt,
@@ -60,27 +97,37 @@ export async function handler(event, context) {
 				},
 				body: JSON.stringify({
 					messages,
-					stream: true,
+					stream: false,
 				}),
 			}
 		);
 
-		// Return the response as a stream
+		if (!copilotLLMResponse.ok) {
+			console.error("Error from Copilot API:", await copilotLLMResponse.text());
+			return {
+				statusCode: copilotLLMResponse.status,
+				body: JSON.stringify({ error: "Error from Copilot API" }),
+			};
+		}
+
+		const responseData = await copilotLLMResponse.json();
+		console.log("Copilot response:", JSON.stringify(responseData));
+
 		return {
 			statusCode: 200,
 			headers: {
-				"Content-Type": "text/event-stream",
-				"Cache-Control": "no-cache",
-				Connection: "keep-alive",
+				"Content-Type": "application/json",
 			},
-			body: copilotLLMResponse.body,
-			isBase64Encoded: false,
+			body: JSON.stringify(responseData),
 		};
 	} catch (error) {
-		console.error("Error:", error);
+		console.error("Unhandled error:", error);
 		return {
 			statusCode: 500,
-			body: JSON.stringify({ error: "Internal Server Error" }),
+			body: JSON.stringify({
+				error: "Internal Server Error",
+				details: error.message,
+			}),
 		};
 	}
 }
