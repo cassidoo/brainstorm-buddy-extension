@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import express from "express";
 import { Readable } from "node:stream";
+import serverless from "serverless-http";
 
 const app = express();
 
@@ -70,7 +71,4 @@ app.post("/", express.json(), async (req, res) => {
 	Readable.from(copilotLLMResponse.body).pipe(res);
 });
 
-const port = Number(process.env.PORT || "3000");
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-});
+export const handler = serverless(app);
