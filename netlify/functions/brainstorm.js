@@ -1,5 +1,4 @@
-import { Octokit } from "@octokit/core";
-import axios from "axios";
+const axios = require("axios");
 
 // from github.com/brainstory/prompts
 const bsPrompt = `
@@ -30,6 +29,7 @@ const bsPrompt = `
 `;
 
 export async function handler(event) {
+	const { Octokit } = await import("@octokit/core");
 	if (event.httpMethod !== "POST") {
 		return {
 			statusCode: 405,
