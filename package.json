@@ -8,7 +8,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@octokit/core": "^6.1.2",
-		"express": "^4.19.2"
+		"@octokit/core": "^6.1.2"
 	}
 }
