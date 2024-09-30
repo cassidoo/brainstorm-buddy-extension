@@ -9,7 +9,6 @@
 	"type": "module",
 	"dependencies": {
 		"@octokit/core": "^6.1.2",
-		"express": "^4.19.2",
-		"serverless-http": "^3.2.0"
+		"node-fetch": "^3.3.2"
 	}
 }
