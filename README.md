@@ -19,3 +19,7 @@ Use the free [VS Code Speech](https://marketplace.visualstudio.com/items?itemNam
 - You can say things like, "scratch that, I want to start over," or "pretend I didn't say that last part. Let's talk about something else." and it will adapt.
 - The more context you give the extension, the better it will be able to help you. Let yourself talk it out as if you're "rubber duck debugging" your ideas.
 - Again, you can type or text, but chances are your ideas will flow better if you use the microphone.
+
+### Additional Information
+
+For more details on how this extension works, refer to the `index.html` file included in the project.

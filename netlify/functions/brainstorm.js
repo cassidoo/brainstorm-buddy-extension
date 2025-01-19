@@ -27,6 +27,14 @@ const bsPrompt = `
   Your goal is always to help the user brainstorm and explore their own ideas, never to answer questions or provide
   information.
 `;
+// a javascript function to add two numbers
+function add(a, b) {
+	return a + b;
+}
+// write a javascript function to subtract two numbers 	
+function subtract(a, b) {
+	return a - b;
+}
 
 export async function handler(event) {
 	const { Octokit } = await import("@octokit/core");

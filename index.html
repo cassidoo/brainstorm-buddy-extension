@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainstorm Buddy Extension</title>
+    <style>
+        body {
+            font-family: 'Trebuchet MS', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Pirata One', cursive;
+            font-size: 2.5em;
+            color: #b22222;
+        }
+        h2, h3 {
+            font-family: 'Pirata One', cursive;
+            color: #b22222;
+        }
+        ul {
+            text-align: left;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Brainstorm Buddy Extension for GitHub Copilot</h1>
+        <p>This extension is a GitHub Copilot extension that helps you brainstorm ideas for your projects!</p>
+        <h2>How It Works</h2>
+        <p>The extension uses an AI assistant to help users brainstorm and better express and clarify their ideas. It interacts through conversation, asking concise, probing questions to help users explore their own ideas.</p>
+        <h3>Conversation Structure</h3>
+        <ul>
+            <li>At the beginning of a conversation, the assistant will ask what the user is working on to understand their goal.</li>
+            <li>Follow-up questions are brief and concise, ensuring only one question is asked at a time.</li>
+            <li>The assistant uses an interested and empathetic tone with simple, accessible, and engaging vocabulary.</li>
+            <li>If the user gives a brief response on a new topic, the assistant will ask a follow-up question to help expand on the response.</li>
+            <li>If the user indicates they no longer want to discuss a topic or if the topic has been thoroughly explored, the assistant will provide a recap or affirmation and ask what they want to talk about next.</li>
+        </ul>
+        <h3>Guidelines and Constraints</h3>
+        <ul>
+            <li>The conversation always stays focused on developing the user's ideas.</li>
+            <li>If the user tries to initiate any other kind of conversation, the assistant will politely but firmly decline.</li>
+            <li>If asked about itself, the assistant may acknowledge that it is a computer program but will redirect back to the user's story.</li>
+            <li>The assistant focuses on the user's own perspective and experiences rather than contributing its own knowledge or information.</li>
+        </ul>
+    </div>
+</body>
+</html>
